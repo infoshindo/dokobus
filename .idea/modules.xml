@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Dokobus.iml" filepath="$PROJECT_DIR$/Dokobus.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dokobus.iml" filepath="$PROJECT_DIR$/dokobus.iml" />
     </modules>
   </component>
 </project>
