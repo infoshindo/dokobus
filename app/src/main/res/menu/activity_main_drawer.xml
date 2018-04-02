@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/all_bus"
+            android:icon="@mipmap/ic_launcher"
+            android:title="全車両表示" />
+        <item
+            android:id="@+id/rosen1"
+            android:icon="@mipmap/ic_launcher"
+            android:title="循環線" />
+        <item
+            android:id="@+id/rosen2"
+            android:icon="@mipmap/ic_launcher"
+            android:title="幹線" />
+        <item
+            android:id="@+id/rosen3"
+            android:icon="@mipmap/ic_launcher"
+            android:title="鯖江南・新横江線" />
+        <item
+            android:id="@+id/rosen4"
+            android:icon="@mipmap/ic_launcher"
+            android:title="神明線" />
+        <item
+            android:id="@+id/rosen5"
+            android:icon="@mipmap/ic_launcher"
+            android:title="片上・北中山線" />
+        <item
+            android:id="@+id/rosen6"
+            android:icon="@mipmap/ic_launcher"
+            android:title="立待線" />
+        <item
+            android:id="@+id/rosen7"
+            android:icon="@mipmap/ic_launcher"
+            android:title="吉川線" />
+        <item
+            android:id="@+id/rosen8"
+            android:icon="@mipmap/ic_launcher"
+            android:title="豊線" />
+        <item
+            android:id="@+id/rosen9"
+            android:icon="@mipmap/ic_launcher"
+            android:title="中河・北中山線" />
+        <item
+            android:id="@+id/rosen10"
+            android:icon="@mipmap/ic_launcher"
+            android:title="河和田線" />
+        <item
+            android:id="@+id/rosen11"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 市内高校ルート" />
+        <item
+            android:id="@+id/rosen12"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 片上・北中山ルート" />
+        <item
+            android:id="@+id/rosen13"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 立待ルート" />
+        <item
+            android:id="@+id/rosen14"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 吉川ルート" />
+        <item
+            android:id="@+id/rosen15"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 豊ルート" />
+        <item
+            android:id="@+id/rosen16"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 中河・北中山ルート" />
+        <item
+            android:id="@+id/rosen17"
+            android:icon="@mipmap/ic_launcher"
+            android:title="通学便 河和田ルート" />
+        <item
+            android:id="@+id/rosen99"
+            android:icon="@mipmap/ic_launcher"
+            android:title="福鉄鯖浦線" />
+    </group>
+</menu>
