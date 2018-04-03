@@ -145,10 +145,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                     if (isRunning == "true")
                                     {
-                                        String rosenId = rootJSON.getString("rosen_id");
+                                        String rosenId = rootJSON.getString("rosenid");
 
                                         // 全路線(0)あるいは同じ路線番号はマッピングする
-                                        if (rosen_id == "0" || rosen_id == rosenId)
+                                        if (rosen_id.equals("0") || rosen_id.equals(rosenId))
                                         {
                                             result.put("isRunning", "true");
                                             result.put("latitude", rootJSON.getString("latitude"));
