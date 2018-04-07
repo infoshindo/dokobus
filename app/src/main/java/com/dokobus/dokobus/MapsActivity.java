@@ -3,8 +3,17 @@ package com.dokobus.dokobus;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+//import android.Manifest;
+//import android.app.Activity;
+//import android.content.pm.PackageManager;
+//import android.graphics.Bitmap;
+//import android.graphics.BitmapFactory;
+//import android.net.Uri;
+//import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +25,23 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +67,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
     private String bus = "";
     private Integer bus_id = 1;
@@ -50,17 +75,170 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Map<Integer, Marker> busPositionMarkers = new HashMap<>();
     private Map<String, String> result = new HashMap<String, String>();
 
+//    private Map<String, String> position = new HashMap<>();
+
+    private String busstop_name;
+
+    private ArrayList<Double> latitudeList = new ArrayList<>();
+    private ArrayList<Double> longitudeList = new ArrayList<>();
+    private ArrayList<String> busStopNameList = new ArrayList<>();
+
+    public static String posinfo = "";
+    public static String info_A = "";
+    public static String info_B = "";
+    ArrayList<LatLng> markerPoints;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         Intent intent = getIntent();
         rosen_id = intent.getStringExtra("rosen_id");
 
+        //    protected void onCreate(Bundle savedInstanceState) {
+//        // httpリクエストを入れる変数
+//        Uri.Builder builder = new Uri.Builder();
+//
+//        //apiデータ取得して、json形式からデータ整形する
+//        AsyncHttpRequest task = new AsyncHttpRequest(this);
+//        task.execute(builder);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+//    public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
+//
+//        private Activity mainActivity;
+//        private String TAG = MapsActivity.class.getSimpleName();
+//
+//        public AsyncHttpRequest(Activity activity) {
+//
+//            // 呼び出し元のアクティビティ
+//            this.mainActivity = activity;
+//        }
+//
+//        // このメソッドは必ずオーバーライドする必要があるよ
+//        // ここが非同期で処理される部分みたいたぶん。
+//        @Override
+//        protected String doInBackground(Uri.Builder... builder) {
+//            // httpリクエスト投げる処理を書く。
+//            // ちなみに私はHttpClientを使って書きましたー
+//
+//            Integer id = 1;
+//
+//            String urlStr = "http://tutujibus.com/busstopLookup.php?rosenid=" + id;  // （2）
+//            HttpURLConnection con = null;  // （3）
+//            InputStream is = null;  // （3）
+//            String result = "";  // （3）
+//            try {
+//                URL url = new URL(urlStr);  // （4）
+//                con = (HttpURLConnection) url.openConnection();  // （5）
+//                con.setRequestMethod("GET");  // （6）
+//                con.connect();  // （7）
+//                is = con.getInputStream();  // （8）
+//
+//
+//
+//
+//
+//                result = set_bus_stop_data(is);  // （9）
+//
+//
+//            }
+//            catch(MalformedURLException ex) {
+//                System.out.println(ex.getMessage());
+//            }
+//            catch(IOException ex) {
+//                System.out.println(ex.getMessage());
+//            }
+//            catch(Exception ex) {
+//                System.out.println(ex.getMessage());
+//            }
+//            finally {
+//                if(con != null) {
+//                    con.disconnect();  // （10）
+//                }
+//                if(is != null) {
+//                    try {
+//                        is.close();  // （11）
+//                    }
+//                    catch(IOException ex) {
+//                    }
+//                }
+//            }
+//
+//
+//            return result;  // （12）
+//        }
+//
+//        // このメソッドは非同期処理の終わった後に呼び出されます
+//        @Override
+//        protected void onPostExecute(String result) {
+//
+//        }
+//
+//        /**
+//         * InputStreamオブジェクトを文字列に変換するメソッド。変換文字コードはUTF-8。
+//         *
+//         * @param is 変換対象のInputStreamオブジェクト。
+//         * @return 変換された文字列。
+//         * @throws IOException 変換に失敗した時に発生。
+//         */
+//        public String set_bus_stop_data(InputStream is) throws IOException {
+//
+//            String data = "";
+//
+//            try{
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+//
+//                String str = reader.readLine();
+//                //()の中にデータがあるので()を取り除く
+//                str = str.replace("(", "");
+//                str = str.replace(")", "");
+//
+//                // JSONObject に変換します
+//                JSONObject json = new JSONObject(str);
+//
+//                //jsonArrayオブジェクト取得(busstopが配列の形式なので)
+//                JSONArray jsonArray = json.getJSONArray("busstop");
+//
+//                //jsonArrayの個数分のjsonオブジェクトの配列を作成
+//                int count = jsonArray.length();
+//
+//                JSONObject[] jsondata = new JSONObject[count];
+//
+//                //jsonArrayから一つずつ取り出して、jsondataに格納していく
+//                for (int i=0; i<count; i++){
+//                    jsondata[i] = jsonArray.getJSONObject(i);
+//                }
+//
+//                busstop_name = jsondata[0].getString("name");
+//
+//                for (JSONObject jobj: jsondata){
+//                    latitudeList.add(jobj.getDouble("latitude"));
+//                    longitudeList.add(jobj.getDouble("longitude"));
+//                    busStopNameList.add(jobj.getString("name"));
+//                }
+//            }
+//            catch(IOException e)
+//            {
+//                System.out.println(e.getMessage());
+//            }
+//            catch (JSONException e) {
+//                System.out.println(e.getMessage());
+//            }
+//            catch(Exception e)
+//            {
+//                System.out.println(e.getMessage());
+//            }
+//            finally {
+//            }
+//
+//            return data;
+//        }
+//    }
 
     @Override
     public void onMapReady(GoogleMap googleMap)
@@ -73,6 +251,82 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 起動時のカメラ位置
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(12).build();
+
+        // 所定位置にバス停画像データをマッピングする
+//        Thread thread = new Thread(new Runnable(){
+//
+//            Bitmap bmp = null;
+//            Bitmap bmpzoom = null;
+//
+//            @Override
+//            public void run() {
+//                URL url;
+//                try{
+//                    url = new URL("http://tutujibus.com/image/busstop32.png");
+//
+//                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//
+//                    //画像のリサイズ　←　
+//                    bmpzoom = bmp.createScaledBitmap(bmp, 100, 100, false);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try{
+//
+//                            // latitudeListが空の場合は1秒間sleepさせて非同期処理の中でバス停座標データの取得をまつ
+//                            // 取得できていればループを抜ける
+//                            while(latitudeList.isEmpty())
+//                            {
+//                                Thread.sleep(1000);
+//                            }
+//
+//                        }
+//                        catch(Exception e)
+//                        {
+//                            System.out.println(e.getMessage());
+//                        }
+//
+//                        //バス停間にラインを引こうとしているがうまく弾けない
+//                        PolylineOptions line_options = new PolylineOptions();
+//
+//                        //格納したバス停の位置の配列分ループしてマーカーを配置
+//                        for (int i = 0; i < latitudeList.size(); i++)
+//                        {
+//
+//                            double latitude  = latitudeList.get(i);
+//                            double longitude = longitudeList.get(i);
+//
+//                            LatLng latlng = new LatLng(latitude, longitude);
+//
+//                            BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(bmpzoom);
+//
+//
+//                            MarkerOptions options = new MarkerOptions();
+//
+//
+//                            //マーカー画像変更
+//                            options.icon(descriptor);
+//
+//                            options.position(new LatLng(latitudeList.get(i), longitudeList.get(i)));
+//                            options.title(busStopNameList.get(i));
+//
+//                            mMap.addMarker(options);
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//        thread.start();
+//
+//        LatLng fukui = new LatLng(35.969696,136.178467);
+//
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(fukui));
+//
+//        CameraPosition cameraPosition = new CameraPosition.Builder().target(fukui).zoom(11).build();
+
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         Timer timer = new Timer(false);
